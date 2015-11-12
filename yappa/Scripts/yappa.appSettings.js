@@ -2,7 +2,9 @@ var yappa;
 (function (yappa) {
     var AppSettings = (function () {
         function AppSettings() {
-            this.baseUrl = "http://pricealert.azurewebsites.net/api";
+            //baseUrl = "https://microsoft-apiappbafd7abfae1e4958a624350cc194ab2d.azurewebsites.net/api";
+            //baseUrl = "http://localhost:19662/api";
+            this.baseUrl = "http://vchehealthws07.vch.ca/yappa.api/api";
         }
         return AppSettings;
     })();
