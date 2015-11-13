@@ -14,25 +14,32 @@
     <link href="Content/app.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div id="app">
-        <div>
-            <div class="pull-right">
-                <div data-bind="text: app.email"></div>
-                <a href="#"
-                   style="display: none"
-                   data-bind="visible: !app.email()"
-                   data-toggle="modal"
-                   data-target="#modal-login">
-                    Login
-                </a>
+    <div class="app">
+        <section class="row">
+            <div class="col-xs-6">
+                <h3>App</h3>
             </div>
-            <h3>PriceBot</h3>
-        </div>
-        <div>
+            <div class="col-xs-6">
+                <div class="pull-right" style="margin-top: 15px">
+                    <span data-bind="text: auth.email"></span>
+                    <span data-bind="visible: auth.email"><a href="#" data-bind="click: auth.signout">(Sign Out)</a></span>
+                    <span>
+                        <a href="#"
+                           style="display: none"
+                           data-bind="visible: !auth.email()"
+                           data-toggle="modal"
+                           data-target="#modal-login">
+                            Login
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </section>
+        <section>
             <p>Never miss a price drop again</p>
             <p>Yappa tracks the price of items and notifies you when the price drops to your target</p>
-        </div>
-        <div class="panel-group">
+        </section>
+        <section class="panel-group" data-bind="visible: app.alertsList().length > 0">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -41,82 +48,74 @@
                 </div>
                 <div class="panel-collapse collapse in">
                     <ul class="list-group">
-                        <!-- ko foreach: app.sortedAlertsList -->
+                        <!-- ko foreach: app.alertsList -->
                         <li class="list-group-item" data-bind="visible: keywords">
-                            <a href="#" class="pull-right fa fa-times" data-bind="click: $parent.app.deleteAlert"></a>
-                            <a href="#" style="line-height: 18px;" data-bind="click: $parent.app.showAlert">
-                                <div style="font-size: 12px" class="pull-right" data-bind="text: $parent.app.formatCurrency(price)"></div>
-                                <div style="font-size: 18px" data-bind="text: keywords"></div>
-                            </a>
+                            <a href="#" class="text-danger pull-right fa fa-times" data-bind="click: $parent.app.deleteAlert"></a>
+                            <div class="pull-right" data-bind="text: $parent.app.formatCurrency(price)"></div>
+                            <a href="#" data-bind="click: $parent.app.showAlert, text: keywords"></a>
                         </li>
                         <!-- /ko -->
-                        <li class="list-group-item"><a href="#" data-bind="click: auth.signout, visible: app.email()">Sign Out</a></li>
                     </ul>
                 </div>
             </div>
-        </div>
-        <div>
+        </section>
+        <section>
             <form data-bind="submit: app.search">
                 <div class="input-group">
                     <input type="text"
                            class="form-control"
-                           data-bind="value: app.keywords"
+                           data-bind="value: app.keywords, disable: app.searching"
                            placeholder="What product are you looking for?" />
                     <span class="input-group-btn">
-                        <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
+                        <button type="submit" class="btn btn-primary" data-bind="disable: app.searching">
+                            <i class="fa fa-search" data-bind="visible: !app.searching()"></i>
+                            <i class="fa fa-spinner fa-spin" data-bind="visible: app.searching"></i>
+                        </button>
                     </span>
                 </div>
             </form>
-        </div>
-        <div class="text-center">
-            <i class="fa fa-spinner fa-spin fa-3x" data-bind="visible: app.searching"></i>
-        </div>
-        <div data-bind="visible: app.displayResult">
+        </section>
+        <section data-bind="visible: app.searchItem">
             <div class="row" data-bind="foreach: app.searchResultList">
                 <div class="col-sm-4">
                     <div style="width: 150px; height: 150px; background-repeat: no-repeat; background-position: center; background-size: contain"
                          data-bind="style: { backgroundImage: 'url(\'' + image + '\')' }"></div>
                 </div>
                 <div class="col-sm-8">
-                    <h3 class="text-primary" data-bind="text: formattedPrice"></h3>
                     <p data-bind="text: title"></p>
+                    <h3 class="text-primary" data-bind="text: formattedPrice"></h3>
                 </div>
             </div>
-            <h4>Set target</h4>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="input-group" style="margin-bottom: 20px">
-                        <span class="input-group-addon">$</span>
-                        <input type="text"
-                               class="form-control"
-                               data-bind="value: app.price, disable: app.creating"
-                               placeholder="What's your target price?" />
-                    </div>
-                    <button type="submit"
-                            class="btn btn-primary"
-                            data-bind="click: app.addAlert, disable: app.creating">
-                        Create alert
-                        <i class="fa fa-spinner fa-spin" data-bind="visible: app.creating"></i>
-                    </button>
-                </div>
-                <div class="col-md-6">
-                    <table class="table table-hover table-striped">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Discount</th>
-                                <th class="text-center">Target</th>
-                            </tr>
-                        </thead>
-                        <tbody style="cursor: pointer" data-bind="foreach: new Array(9)">
-                            <tr data-bind="click: $parent.app.setDiscount(($index()+1)*10)">
-                                <td class="text-center" data-bind="text: ($index()+1) + '0% off'"></td>
-                                <td class="text-center" data-bind="text: $parent.app.discount(($index()+1)*10)"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+        </section>
+        <section data-bind="visible: app.searchItem">
+            <h4>Set a target price</h4>
+            <div class="input-group" style="margin-bottom: 20px">
+                <span class="input-group-addon">$</span>
+                <input type="text"
+                       class="form-control"
+                       data-bind="value: app.price, disable: app.creating"
+                       placeholder="What's your target price?" />
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-right" data-bind="foreach: app.discounts">
+                        <li>
+                            <a href="#" data-bind="click: $parent.app.setDiscount">
+                                <span data-bind="text: $parent.app.formatCurrency($data)"></span>
+                                (<span data-bind="text: ($index()+1) + '0% off'"></span>)
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
+            <p class="text-center">
+                <button type="submit"
+                        class="btn btn-primary"
+                        data-bind="click: app.addAlert, disable: app.adding">
+                    Create alert
+                    <i class="fa fa-spinner fa-spin" data-bind="visible: app.adding"></i>
+                </button>
+            </p>
+        </section>
         <div class="modal fade" id="modal-login">
             <div class="modal-dialog">
                 <div class="modal-content">

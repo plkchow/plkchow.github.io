@@ -2,9 +2,10 @@ var yappa;
 (function (yappa) {
     var Authentication = (function () {
         function Authentication() {
+            this.email = ko.observable("");
         }
         Authentication.prototype.signout = function () {
-            yappa.app.email("");
+            yappa.auth.email("");
             yappa.app.alertsList.removeAll();
             yappa.cache.removeEmail();
             yappa.cache.removeToken();
@@ -31,20 +32,18 @@ var yappa;
             var data = { provider: provider, token: token };
             $.get(yappa.appSettings.baseUrl + "/accounts/token", data)
                 .done(function (result) {
-                yappa.app.email(result.userName);
+                yappa.auth.email(result.userName);
                 yappa.cache.setEmail(result.userName);
                 yappa.cache.setToken(result.access_token);
                 yappa.app.getAlerts();
             });
         };
         Authentication.prototype.verifyCacheToken = function () {
-            var token = yappa.cache.getToken();
             $.ajax({
                 url: yappa.appSettings.baseUrl + "/accounts/verify",
                 type: "GET",
-                success: function () {
-                    var email = yappa.cache.getEmail();
-                    yappa.app.email(email);
+                success: function (email) {
+                    yappa.auth.email(email);
                     yappa.app.getAlerts();
                 }
             });

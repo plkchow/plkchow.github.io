@@ -9,12 +9,16 @@ body, html {
     font-weight: 300;
 }
 
+section {
+    padding: 20px 0;
+}
+
 .nav > li > a {
     padding: 10px 50px;
 }
 
-#app {
-    max-width: 500px;
+.app {
+    max-width: 640px;
     padding: 0 5% 0 5%;
     margin: 0 auto;
 }
