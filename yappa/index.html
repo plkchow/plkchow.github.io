@@ -50,7 +50,10 @@
                     <ul class="list-group">
                         <!-- ko foreach: app.alertsList -->
                         <li class="list-group-item" data-bind="visible: keywords">
-                            <a href="#" class="text-danger pull-right fa fa-times" data-bind="click: $parent.app.deleteAlert"></a>
+                            <a href="#" class="text-danger pull-right fa fa-times"
+                               data-bind="click: $parent.app.deleteAlertConfirm"
+                               data-toggle="modal"
+                               data-target="#modal-delete"></a>
                             <div class="pull-right" data-bind="text: $parent.app.formatCurrency(price)"></div>
                             <a href="#" data-bind="click: $parent.app.showAlert, text: keywords"></a>
                         </li>
@@ -131,6 +134,29 @@
                                 style="border: 0 solid #ab2b1d; background-color: #bf3727; color: white">
                             <i class="fa fa-google"></i>
                             Sign In with Google
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Remove this alert?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <button type="button"
+                                class="btn btn-danger"
+                                data-dismiss="modal"
+                                data-bind="click: app.deleteAlert">
+                            Yes
+                        </button>
+                        <button type="button"
+                                class="btn"
+                                data-dismiss="modal">
+                            No
                         </button>
                     </div>
                 </div>

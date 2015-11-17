@@ -5,6 +5,7 @@ var yappa;
             var _this = this;
             this.keywords = ko.observable("");
             this.price = ko.observable("");
+            this.deleteItem = ko.observable(null);
             this.searchResultList = ko.observableArray([]);
             this.alertsList = ko.observableArray([]);
             this.searching = ko.observable(false);
@@ -106,18 +107,20 @@ var yappa;
             yappa.app.search();
         };
         App.prototype.deleteAlert = function (d, e) {
+            var deleteItem = yappa.app.deleteItem();
             $.ajax({
-                url: yappa.appSettings.baseUrl + "/alerts/" + d.index,
+                url: yappa.appSettings.baseUrl + "/alerts/" + deleteItem.index,
                 contentType: "application/json",
                 type: "DELETE",
                 success: function (success) {
                     if (success) {
-                        yappa.app.alertsList.remove(function (item) {
-                            return item.index === d.index;
-                        });
+                        yappa.app.alertsList.remove(deleteItem);
                     }
                 }
             });
+        };
+        App.prototype.deleteAlertConfirm = function (d, e) {
+            yappa.app.deleteItem(d);
         };
         App.prototype.setDiscount = function (d) {
             yappa.app.price(d.toFixed(2));
