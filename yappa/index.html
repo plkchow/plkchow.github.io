@@ -55,7 +55,13 @@
                                data-toggle="modal"
                                data-target="#modal-delete"></a>
                             <div class="pull-right" data-bind="text: $parent.app.formatCurrency(price)"></div>
-                            <a href="#" data-bind="click: $parent.app.showAlert, text: keywords"></a>
+                            <i class="pull-left text-success glyphicon glyphicon-check"
+                               data-bind="visible: notified"></i>
+                            <i class="pull-left text-success glyphicon glyphicon-unchecked"
+                               data-bind="visible: !notified"></i>
+                            <a href="#" style="margin-left: 10px"
+                               data-toggle="tooltip"
+                               data-bind="click: $parent.app.showAlert, text: keywords, attr: {title: $parent.app.tooltip(notified)}"></a>
                         </li>
                         <!-- /ko -->
                     </ul>

@@ -86,7 +86,7 @@ var yappa;
             var price = Number(yappa.app.price());
             if (price) {
                 yappa.app.adding(true);
-                var data = { index: -1, keywords: yappa.app.keywords(), price: price };
+                var data = { index: -1, keywords: yappa.app.keywords(), price: price, notified: null };
                 $.ajax({
                     url: yappa.appSettings.baseUrl + "/alerts",
                     type: "POST",
@@ -127,6 +127,14 @@ var yappa;
         };
         App.prototype.formatCurrency = function (value) {
             return "$" + value.toFixed(2);
+        };
+        App.prototype.tooltip = function (notified) {
+            if (notified) {
+                return "We have sent a notification for this alert on " + notified;
+            }
+            else {
+                return null;
+            }
         };
         return App;
     })();
